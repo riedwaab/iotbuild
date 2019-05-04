@@ -1,0 +1,34 @@
+#!bin/bash
+
+# Needs JQ to be installed
+type jq >/dev/null 2>&1 || { echo >&2 "I require jq (https://stedolan.github.io/jq) but it's not installed. Aborting."; exit 1; }
+
+RESOURCE_GROUP=$(jq -r '.resourceGroup' settings.json)
+LOCATION_NAME=$(jq -r '.locationName' settings.json)
+IOT_HUB=$(jq -r '.iotHubName' settings.json)
+EDGE_DEVICE_NAME=$(jq -r '.iotEdgeDeviceName' settings.json)
+SKU=$(jq -r '.sku' settings.json)
+
+type $SKU >/dev/null 2>&1 || { echo "Azure IoT SKU not set. Using S1 SKU"; SKU="S1"; }
+
+echo "Testing to see if resource group $RESOURCE_GROUP exits ..."
+test=$(az group show -g $RESOURCE_GROUP --output tsv)
+
+#if resource group was found, abort
+#####type $test >/dev/null 2>&1 || { echo >&2 "Resource group was found. Aborting."; exit 1; }
+echo "Good to continue ..."
+echo "IoT Hub Name        : $IOT_HUB"
+echo "Resource Group Name : $RESOURCE_GROUP"
+echo "Region Location     : $LOCATION_NAME"
+echo "IoT SKU             : $SKU"
+
+echo "\nCreating Resource Group $RESOURCE_GROUP..."
+#####az group create -g $RESOURCE_GROUP -l $LOCATION_NAME > /dev/null
+
+echo "Creating IoT Hub $IOT_HUB ..."
+#####az iot hub create --name $IOT_HUB --resource-group $RESOURCE_GROUP --sku $SKU
+
+echo "Creating IoT Edge Device $EDGE_NAME"
+az iot hub device-identity create --device-id $EDGE_DEVICE_NAME --hub-name $IOT_HUB --edge-enabled
+
+

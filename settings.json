@@ -1,0 +1,7 @@
+{
+	"resourceGroup": "IoTdemo",
+        "locationName": "westeurope",
+	"iotHubName": "iotZA",
+	"iotEdgeDeviceName": "eyepi"
+}
+
